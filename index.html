@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DMND KUTZ One-on-One</title>
+<meta name="description" content="Your weekly one-on-one with your manager, plus your days for next week. Takes a few minutes, no login.">
+<meta property="og:title" content="DMND KUTZ One-on-One">
+<meta property="og:description" content="Your weekly one-on-one with your manager, plus your days for next week. Takes a few minutes, no login.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://dmndkutz.github.io/one-on-one/og-card.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Cpath d=%22M20 2 38 20 20 38 2 20Z%22 fill=%22%23ED1C24%22/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@700&display=swap">
+<style>
+/* Layout: one narrow phone column, same as /license and /apply; the "your view" tab widens for the schedule grid. */
+:root {
+  --bg: #0B0B0C; --surface: #151517; --surface-2: #1C1C1F; --ink: #F3F3F4; --muted: #A3A5AA; --line: #2E2F33;
+  --red: #ED1C24; --red-soft: rgba(237,28,36,.14); --silver: #BDBEC0; --ok: #4CC97A; --err: #FF6B70; --warn: #F2B544;
+  --display: "Archivo Black", "Arial Black", Impact, sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --label: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.45; }
+body { border-top: 4px solid var(--red); }
+
+.wrap { max-width: 540px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; }
+.top { display: flex; gap: 14px; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.top .logo { width: 72px; height: auto; flex: none; }
+.brand { font-family: var(--display); font-size: 24px; line-height: 1; letter-spacing: .02em; }
+.brand span { color: var(--red); }
+h1 { font-family: var(--display); font-size: 28px; line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--display); font-size: 19px; line-height: 1.15; margin: 0; letter-spacing: .02em; text-transform: uppercase; }
+h2 span { color: var(--red); }
+.lead { color: var(--muted); margin: 6px 0 0; }
+form { display: grid; gap: 18px; }
+.block { display: grid; gap: 18px; padding-top: 22px; border-top: 1px solid var(--line); }
+.field { display: grid; gap: 6px; min-width: 0; }
+.lbl { font-family: var(--label); font-size: 15px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--silver); }
+.lbl em { font-style: normal; color: var(--muted); letter-spacing: .03em; text-transform: none; font-family: var(--body); font-weight: 500; font-size: 14px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 420px) { .row2 { grid-template-columns: 1fr; } }
+input[type=text], input[type=date], select, textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 13px 14px; min-height: 50px;
+}
+textarea { resize: vertical; min-height: 120px; line-height: 1.4; }
+select:disabled { color: var(--muted); }
+input:focus, select:focus, textarea:focus, button:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
+::placeholder { color: #6E7076; }
+.hint { font-size: 14px; color: var(--muted); }
+
+/* Optional topic rows, numbered like the paper sheet */
+.topics { display: grid; gap: 8px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.topic summary { list-style: none; display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: center; padding: 13px 14px; cursor: pointer; min-height: 52px; }
+.topic summary::-webkit-details-marker { display: none; }
+.topic .num { font-family: var(--display); color: var(--red); font-size: 18px; text-align: center; }
+.topic .t { font-weight: 600; }
+.topic .state { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.topic .state::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); margin: -4px 2px 0 6px; }
+.topic[open] .state::after { transform: rotate(-135deg); margin-top: 4px; }
+.topic.filled { border-color: rgba(76,201,122,.5); }
+.topic.filled .state { color: var(--ok); font-weight: 600; }
+.topic .body { padding: 0 14px 14px; display: grid; gap: 10px; }
+.topic ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 15px; }
+.topic textarea { min-height: 90px; background: var(--bg); }
+
+.goals { display: grid; gap: 8px; }
+.goal { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: center; }
+.goal span { font-family: var(--display); color: var(--red); text-align: center; font-size: 18px; }
+
+/* Next-week days */
+.days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.days input { position: absolute; opacity: 0; pointer-events: none; }
+.days label { display: grid; gap: 2px; place-items: center; padding: 10px 0 9px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); cursor: pointer; user-select: none; }
+.days label b { font-family: var(--label); font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--silver); }
+.days label span { font-family: var(--display); font-size: 19px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.days label i { font-style: normal; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.days input:checked + label { background: var(--red); border-color: var(--red); }
+.days input:checked + label b, .days input:checked + label span, .days input:checked + label i { color: #fff; }
+.days input:focus-visible + label { outline: 2px solid var(--ink); outline-offset: 1px; }
+.dayline { font-size: 15px; color: var(--muted); }
+.dayline b { color: var(--ink); }
+.quick { display: flex; flex-wrap: wrap; gap: 8px; }
+.quick button { font: inherit; font-size: 14px; font-weight: 600; color: var(--silver); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+
+button[type=submit] { font-family: var(--display); font-size: 19px; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: var(--red); border: 0; border-radius: 8px; padding: 15px; min-height: 54px; cursor: pointer; box-shadow: 0 6px 22px rgba(237,28,36,.35); }
+.msg { color: var(--err); min-height: 1.2em; font-weight: 600; }
+.foot { font-size: 13px; color: var(--muted); margin: 0; }
+.done { display: grid; gap: 14px; text-align: center; padding: 30px 0; }
+.done .check { width: 64px; height: 64px; margin: 0 auto; border-radius: 50%; background: var(--red); display: grid; place-items: center; }
+.done .again { font: inherit; font-weight: 700; color: var(--ink); background: none; border: 1px solid var(--line); border-radius: 8px; padding: 13px; cursor: pointer; }
+
+@media (prefers-reduced-motion: no-preference) { .days label { transition: background-color .15s; } }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="formPage">
+  <div class="top">
+    <svg class="logo" role="img" aria-label="DMND KUTZ" xmlns="http://www.w3.org/2000/svg" viewBox="0 30 1584 1345"><defs><style>.dk-1{fill:#BDBEC0;}.dk-2{fill:#ED1C24;}.dk-3{fill:#fff;}.dk-4{fill:#000000;}</style></defs><circle class="dk-1" cx="792.68" cy="647.82" r="583.62"/><path class="dk-4" d="M1354.73,410.37c-30.72-72.64-74.7-137.87-130.72-193.89-56.01-56.01-121.25-99.99-193.89-130.72-75.22-31.82-155.11-47.95-237.45-47.95s-162.23,16.13-237.45,47.95c-72.64,30.72-137.87,74.7-193.89,130.72-56.01,56.01-99.99,121.25-130.72,193.89-31.82,75.22-47.95,155.11-47.95,237.45s16.13,162.23,47.95,237.45c30.72,72.64,74.7,137.87,130.72,193.89s121.25,99.99,193.89,130.72c75.22,31.82,155.11,47.95,237.45,47.95s162.23-16.13,237.45-47.95c72.64-30.72,137.87-74.7,193.89-130.72,56.01-56.01,99.99-121.25,130.72-193.89,31.82-75.22,47.95-155.11,47.95-237.45s-16.13-162.23-47.95-237.45ZM1376.3,647.82c0,322.32-261.29,583.62-583.62,583.62S209.07,970.14,209.07,647.82,470.36,64.2,792.68,64.2s583.62,261.29,583.62,583.62Z"/><path class="dk-4" d="M1360.33,194.35h-200.47c-.65-.03-1.28-.03-1.91-.03-4.79,0-12.08.4-20.22,3.8-17.63,7.41-31.26,18.41-40.02,32.17l-17.13-35.94h-447.61l-14.38,40.78-14.23-40.85-96.82.24-18.83,39.82c-8.57-15.67-23.09-28.09-42.44-36.22-8.12-3.4-15.42-3.8-20.19-3.8-.63,0-1.28,0-1.83.01h-.86s-199.7.01-199.7.01L0,579.96l118.81,112.16,348.18,350.08,41.97-41.97v80.93l284.15,287.14,290.09-286.36v-87.34h89.74l296.7-303.43.09-.09,114.27-111.12-223.67-385.61ZM1083.2,826.5v-.03h.03l-.03.03Z"/><polygon class="dk-3" points="1020.76 556.21 967.73 443.71 1066.69 556.21 1225.7 556.21 1064.54 218.09 940.73 218.09 991.94 330.58 893.73 218.09 735.09 218.09 895.65 556.21 1020.76 556.21"/><polygon class="dk-3" points="506.16 556.21 541.83 483.09 582.79 556.21 654.22 556.21 693.37 484.24 726.02 556.21 872.79 556.21 713.76 218.09 648.72 218.09 617.39 306.9 586.45 218.06 521.53 218.23 361.69 556.21 506.16 556.21"/><path class="dk-3" d="M197.15,556.19c31.78,0,63.19,0,86.56.01,5.46,0,10.88-.71,16.1-2.12,52.94-14.27,73.21-60.45,91.1-101.2,3.89-8.85,7.9-18.01,12.12-26.59,7.17-14.59,14.98-29.69,22.52-44.3,13.73-26.58,27.93-54.06,39.9-81.31,8.23-18.71,9.5-35.46,3.79-49.78-5.38-13.49-16.56-23.88-33.23-30.88-4.13-1.73-8.05-1.95-11.01-1.95-.52,0-1.04,0-1.57.01h-.98s-186.17.01-186.17.01l-3.81,6.57c-8.85,15.25-17.62,30.78-26.11,45.79-8.45,14.96-17.19,30.43-25.97,45.56-24.41,42.04-127.47,218.58-128.51,220.36l-11.58,19.85h22.98s67.74-.02,133.87-.02ZM280.36,355.71c14.24-26.36,26.69-49.39,33.83-63.23,4.73.58,12.72,4.57,17.6,8.21.49.86,5.03,10.65-12.17,51.91-11.08,26.57-26.1,53.96-33.32,67.11-2.39,4.35-4.65,8.97-6.83,13.43-8.07,16.49-15.7,32.07-29.71,37.24-6.9,2.55-14.71,3.73-24.57,3.73-2.54,0-5.12-.08-7.73-.21,18.42-35.91,42.92-81.24,62.89-118.19Z"/><path class="dk-3" d="M1156.34,381.98c7.55,14.61,15.35,29.71,22.52,44.3,4.22,8.59,8.24,17.74,12.12,26.59,17.89,40.75,38.16,86.93,91.1,101.2,5.23,1.41,10.65,2.12,16.12,2.12,23.34-.01,54.76-.01,86.54-.01,66.14,0,133.87.02,133.87.02h22.98s-11.58-19.84-11.58-19.84c-1.04-1.78-104.1-178.33-128.51-220.36-8.78-15.12-17.52-30.6-25.97-45.56-8.48-15.02-17.25-30.54-26.11-45.79l-3.81-6.57h-186.11s-1.04-.01-1.04-.01c-.53,0-1.05-.01-1.57-.01-2.96,0-6.89.22-11.02,1.96-16.66,7-27.84,17.39-33.22,30.88-5.71,14.32-4.43,31.06,3.79,49.77,11.97,27.25,26.17,54.74,39.9,81.32ZM1250.11,300.69c4.89-3.64,12.87-7.63,17.6-8.21,7.13,13.84,19.58,36.88,33.83,63.23,19.97,36.95,44.47,82.28,62.89,118.19-2.6.13-5.19.21-7.73.21-9.86,0-17.67-1.18-24.57-3.73-14.01-5.17-21.63-20.75-29.71-37.24-2.19-4.47-4.44-9.08-6.83-13.43-7.22-13.16-22.24-40.54-33.32-67.12-17.2-41.25-12.65-51.05-12.17-51.91Z"/><polygon class="dk-3" points="32.49 574.67 134.53 675.31 371.15 913.91 448.8 836.26 298.74 679.17 949.79 679.17 949.79 1176.45 1058.41 1071.84 1058.41 679.17 1446.95 679.17 1552.88 574.67 32.49 574.67"/><polygon class="dk-3" points="529.41 754.01 468.09 692.7 337.48 692.7 471.41 836.15 382.44 925.12 465.94 1008.63 531.65 942.92 531.65 1071.33 638.63 1178.3 638.63 693.37 529.41 693.37 529.41 754.01"/><path class="dk-3" d="M825.46,1067.11c0,18.42-14.99,33.41-33.41,33.41s-33.41-14.99-33.41-33.41v-374.08h-109.71v498.58l143.12,143.12,143.12-143.12v-498.58h-109.71v374.08Z"/><polygon class="dk-3" points="1073.35 802.74 1139.49 802.74 1073.35 868.88 1073.35 970.86 1161.69 970.86 1265.97 861.15 1211.33 861.15 1332.13 800.3 1434.07 693.03 1073.35 693.03 1073.35 802.74"/><polygon class="dk-2" points="999.96 543.02 916.03 364.95 1072.65 543.02 1204.81 543.02 1056.22 231.28 961.23 231.28 1041.3 407.18 887.74 231.28 755.95 231.28 903.99 543.02 999.96 543.02"/><polygon class="dk-2" points="497.92 543.02 541.02 454.66 590.52 543.02 646.38 543.02 694.44 454.67 734.52 543.02 852.01 543.02 705.39 231.28 658.05 231.28 617.31 346.77 577.08 231.28 529.89 231.4 382.52 543.02 497.92 543.02"/><path class="dk-2" d="M283.7,543.01c4.28,0,8.55-.56,12.69-1.67,57.33-15.45,71.09-72.61,94.81-120.88,20.14-40.95,43.77-83.17,62.19-125.1,12.81-29.13,5.83-51.31-22.46-63.19-2.7-1.13-5.55-.91-8.46-.9h-178.58c-17.63,30.37-34.45,60.98-52.08,91.35-24.7,42.53-128.53,220.39-128.53,220.39,0,0,148.48-.03,220.42,0ZM201.54,476.11c32.15-63.39,86.45-161.12,102.56-192.86,7.16-9.98,27.77.99,35.76,7,22.98,17.29-26.48,107.56-41.98,135.81-11.21,20.43-19.84,47.96-43.54,56.7-17.7,6.53-36.85,4.58-55.21,2.95-2.48-.31.92-6.66,2.41-9.6Z"/><path class="dk-2" d="M1190.7,420.46c23.73,48.27,37.48,105.42,94.81,120.88,4.13,1.11,8.4,1.67,12.69,1.67,71.94-.03,220.42,0,220.42,0,0,0-103.82-177.85-128.53-220.39-17.63-30.37-34.45-60.98-52.08-91.35h-178.58c-2.91-.01-5.76-.23-8.46.9-28.29,11.88-35.27,34.05-22.46,63.19,18.41,41.93,42.05,84.15,62.19,125.1ZM1242.05,290.25c7.99-6.01,28.59-16.99,35.76-7,16.11,31.75,70.41,129.48,102.56,192.86,1.49,2.94,4.9,9.29,2.41,9.6-18.36,1.62-37.51,3.57-55.21-2.95-23.7-8.74-32.33-36.27-43.54-56.7-15.5-28.25-64.96-118.51-41.98-135.81Z"/><polygon class="dk-2" points="64.65 587.86 143.85 665.98 371.19 895.22 436.62 829.79 272.81 665.98 962.98 665.98 962.98 1145.43 1045.22 1066.23 1045.22 665.98 1441.54 665.98 1520.72 587.86 64.65 587.86"/><polygon class="dk-2" points="542.6 785.86 462.63 705.89 359.8 705.89 490.06 836.15 401.09 925.12 465.94 989.97 544.84 911.08 544.84 1065.86 625.43 1146.46 625.43 706.56 542.6 706.56 542.6 785.86"/><path class="dk-2" d="M838.65,1067.11c0,25.73-20.86,46.6-46.6,46.6h0c-25.73,0-46.6-20.86-46.6-46.6v-360.89h-83.33v479.93l129.93,129.93,129.93-129.93v-479.93h-83.33v360.89Z"/><polygon class="dk-2" points="1086.54 789.55 1171.33 789.55 1086.54 874.34 1086.54 957.67 1156.03 957.67 1235.23 874.34 1155.82 874.34 1324.15 789.55 1403.34 706.22 1086.54 706.22 1086.54 789.55"/></svg>
+    <div class="brand"><span>ONE</span>-ON-<span>ONE</span></div>
+  </div>
+
+  <div id="intro">
+    <h1>Weekly one-on-one</h1>
+    <p class="lead">Fill this out after your one-on-one with your manager. Write a quick summary. You don't have to answer every question.</p>
+  </div>
+
+  <form id="f" novalidate>
+    <div class="field">
+      <label class="lbl" for="shop">Shop</label>
+      <select id="shop"><option value="">Choose your shop</option></select>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="barber">Barber</label>
+      <select id="barber" disabled><option value="">Choose your shop first</option></select>
+      <input type="text" id="barberOther" maxlength="60" autocapitalize="words" placeholder="Your full name" hidden>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label class="lbl" for="mgr">Who ran it</label>
+        <select id="mgr" disabled><option value="">Choose your shop first</option></select>
+        <input type="text" id="mgrOther" maxlength="60" autocapitalize="words" placeholder="Their name" hidden>
+      </div>
+      <div class="field">
+        <label class="lbl" for="date">Date</label>
+        <input type="date" id="date">
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>The <span>meeting</span></h2>
+      <div class="field">
+        <label class="lbl" for="summary">Summary</label>
+        <textarea id="summary" maxlength="3000" placeholder="How the week went, what you talked about, anything that came up."></textarea>
+        <span class="hint">A few lines is enough.</span>
+      </div>
+
+      <div class="field">
+        <span class="lbl">What you went over</span>
+        <span class="hint">Tap each topic and write what you talked about. Skip any you didn't get to.</span>
+        <div class="topics" id="topics"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Goals <span>moving forward</span></h2>
+      <div class="field">
+        <span class="lbl">9. Action / goals for next week</span>
+        <div class="goals">
+          <div class="goal"><span>1</span><input type="text" id="g1" maxlength="200" placeholder="e.g. Rebook every client before they leave"></div>
+          <div class="goal"><span>2</span><input type="text" id="g2" maxlength="200" placeholder="Optional"></div>
+          <div class="goal"><span>3</span><input type="text" id="g3" maxlength="200" placeholder="Optional"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl" for="follow">Next follow-up date</label>
+        <input type="date" id="follow">
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Next <span>week</span></h2>
+      <div class="field">
+        <span class="lbl" id="weekLbl">Days you're working</span>
+        <div class="days" id="days" role="group" aria-labelledby="weekLbl"></div>
+        <div class="quick">
+          <button type="button" id="qAll">All 7</button>
+          <button type="button" id="qWeekdays">Mon–Fri</button>
+          <button type="button" id="qClear">Clear</button>
+        </div>
+        <span class="dayline" id="dayline">Tap the days you'll be in.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="offNote">Time off or schedule notes <em>(optional)</em></label>
+        <input type="text" id="offNote" maxlength="200" placeholder="e.g. Leaving at 3 on Friday, doctor's appt">
+      </div>
+    </div>
+
+    <div class="msg" id="msg" role="alert"></div>
+    <button type="submit" id="send">Send my one-on-one</button>
+    <p class="foot">Only DMND KUTZ management sees this.</p>
+  </form>
+
+  <div class="done" id="done" hidden>
+    <div class="check"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17.5 19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h1 id="doneTitle">Got it</h1>
+    <p class="lead" id="doneText">Your one-on-one is in.</p>
+    <button type="button" class="again" id="again">Start another one</button>
+  </div>
+</div>
+
+<script>
+const SAVE_URL = 'https://script.google.com/macros/s/AKfycbygDrCwDf3rgQb94l0vgK_EbBQYyqfgh74VkkGebwiKf7qWKpyRNHG53U9slnZFpw76AQ/exec';
+const ROSTER = {"Arcadia": ["Cris Vega", "Eddie Hilfiger", "Fonzie PonceDeLeon", "Frankie Garcia", "Gilbert Beltran", "Harold Barber", "Julio Soto", "Luis Javier", "Mitch Garcia"], "Avondale": ["Adrian Alvarez", "Cameron Kidd", "Cisco", "Cobbo Cuts", "Danny Gamboa", "EJ McRae", "Eddie Hernandez", "Ernesto Galaviz", "Isaac Lizarraga", "Ismael Quintero", "Johnny Diaz", "Kevin Gutierrez", "Ricky", "Sergio Santos", "Shaggy", "Tito Villasenor", "Zo"], "Buckeye": ["Alfonso Ballesteros", "James Handsomecuts", "Jelani White", "Jordan King", "Lem F.", "Samuel Madrigal", "Tonio T.", "Xavier V."], "Cactus": ["Abdu Vilyakhunov", "Alexander Johnson", "Elvin Boyd", "Louie Valtierra", "Mohammed Ali Al-saltani", "Skip Dixon"], "Chandler": ["Adrian Mendoza", "Bryan Herrera", "Erick Diaz", "Johnny Gutierrez", "Rafael Pena", "Robbie McQueen"], "Laveen": ["Alisha", "Anthony Pacheco", "Antonio Goodman", "Bernardo Espinoza", "Charles Alexander", "Isaac Castañeda", "Isaac Wilder", "Javi Sanchez", "Juanito Rodriguez", "Martin Salcido", "Terrence Frierson"], "Northern": ["Anahi Martinez", "Ethan James", "Marcus Moore", "Moe Foster", "Q. Da.Barber", "Ricardo Rivera"], "Olive": ["Beto Giancola", "Erik Perez Sanchez", "Jerry Hernandez Roman", "Slime"], "Peoria": ["Ivan Fades", "JJ", "Jbluryy", "Jelo", "Los Garcia", "Marissa Cardenas", "PlaceTheBlade(Romeo)"], "Phoenix": ["Andrew Vargas", "Angelo Vargas", "Dylan Moquin", "Dylin Martinez", "Elijah Kincade", "John Rodriguez", "Jordan Baumgardner", "Julian Alviso", "Justin Haynes", "Nate Guzman", "Robert Monreal", "Sammy Saenz"]};
+// Managers who run one-on-ones, per shop (Andrew, 25 Oct 2026).
+const MANAGERS = {"Arcadia": ["Mitch", "Frankie"], "Avondale": ["Adrian", "Tito", "Danny"], "Buckeye": ["Lem"], "Cactus": ["Alex"], "Chandler": ["Bryan"], "Laveen": ["Anthony", "Bernardo", "Alisha"], "Northern": ["Anahi", "Ethan"], "Olive": ["Slime", "Beto"], "Peoria": ["Jbluryy"], "Phoenix": ["Robert", "Dylin", "Angelo"]};
+const SHOPS = Object.keys(ROSTER).sort();
+const TOPICS = [
+  ['Quick check-in', ['How was your week overall?', 'Any immediate concerns, updates, or wins?']],
+  ['Previous week review', ['Review performance from last week', 'Highlight achievements', 'Discuss challenges or missed opportunities']],
+  ['Client experience & reviews', ['Review positive client feedback', 'Address any concerns or service issues', 'Discuss ways to improve customer experience']],
+  ['Goals & progress', ['Review previous goals', 'Discuss progress made', 'Identify obstacles', 'Set goals for the upcoming week']],
+  ['Sales & commission', ['Review product or take-home sales', 'Discuss commission questions', 'Strategies to increase product sales']],
+  ['Schedule, operations & accountability', ['Schedule, punctuality and time off', 'Station cleanliness and professionalism', 'Operational or equipment issues']],
+  ['Growth & development', ['Training needs', 'Skill improvement areas', 'Upcoming workshops or barber events']],
+  ['Feedback & support', ['Barber feedback or concerns', 'Management support discussion']]
+];
+const DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function iso(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function parse(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+// The Monday after the meeting date: that's "next week" (Mon–Sun, same as the pay week).
+function nextMonday(d) { const k = (8 - d.getDay()) % 7 || 7; return addDays(d, k); }
+function rangeText(mon) { const sun = addDays(mon, 6); return DOW[0] + ' ' + MON[mon.getMonth()] + ' ' + mon.getDate() + ' – ' + DOW[6] + ' ' + MON[sun.getMonth()] + ' ' + sun.getDate(); }
+
+/* ---------- form ---------- */
+SHOPS.forEach(s => $('shop').insertAdjacentHTML('beforeend', '<option>' + esc(s) + '</option>'));
+$('shop').addEventListener('change', () => {
+  const s = $('shop').value, b = $('barber');
+  b.innerHTML = '';
+  fillManagers(s);
+  if (!s) { b.disabled = true; b.innerHTML = '<option value="">Choose your shop first</option>'; $('barberOther').hidden = true; return; }
+  b.disabled = false;
+  b.insertAdjacentHTML('beforeend', '<option value="">Choose your name</option>');
+  [...ROSTER[s]].sort((a, c) => a.localeCompare(c)).forEach(n => b.insertAdjacentHTML('beforeend', '<option>' + esc(n) + '</option>'));
+  b.insertAdjacentHTML('beforeend', '<option value="__other">I\'m not on the list</option>');
+  $('barberOther').hidden = true;
+});
+function fillManagers(s) {
+  const m = $('mgr');
+  $('mgrOther').hidden = true;
+  if (!s) { m.disabled = true; m.innerHTML = '<option value="">Choose your shop first</option>'; return; }
+  m.disabled = false;
+  m.innerHTML = '<option value="">Choose your manager</option>' + (MANAGERS[s] || []).map(n => '<option>' + esc(n) + '</option>').join('') + '<option value="__other">Someone else</option>';
+}
+$('barber').addEventListener('change', () => { $('barberOther').hidden = $('barber').value !== '__other'; if (!$('barberOther').hidden) $('barberOther').focus(); });
+$('mgr').addEventListener('change', () => { $('mgrOther').hidden = $('mgr').value !== '__other'; if (!$('mgrOther').hidden) $('mgrOther').focus(); });
+
+TOPICS.forEach(([t, bullets], i) => {
+  $('topics').insertAdjacentHTML('beforeend',
+    '<details class="topic" id="topic' + (i+1) + '"><summary><span class="num">' + (i+1) + '</span><span class="t">' + esc(t) + '</span><span class="state">Tap to add</span></summary>' +
+    '<div class="body"><ul>' + bullets.map(b => '<li>' + esc(b) + '</li>').join('') + '</ul>' +
+    '<textarea id="t' + (i+1) + '" maxlength="1500" aria-label="' + esc(t) + ' notes" placeholder="What did you go over?"></textarea></div></details>');
+});
+document.querySelectorAll('.topic textarea').forEach(ta => ta.addEventListener('input', () => {
+  const d = ta.closest('.topic'), has = ta.value.trim().length > 0;
+  d.classList.toggle('filled', has);
+  d.querySelector('.state').textContent = has ? 'Added' : 'Tap to add';
+}));
+
+function buildDays() {
+  const mon = nextMonday(parse($('date').value || iso(new Date())));
+  const kept = [...document.querySelectorAll('#days input')].map(x => x.checked);
+  $('weekLbl').textContent = "Days you're working, " + rangeText(mon);
+  $('days').innerHTML = DOW.map((d, i) => {
+    const day = addDays(mon, i);
+    return '<input type="checkbox" id="d' + i + '"' + (kept[i] ? ' checked' : '') + '><label for="d' + i + '"><b>' + d + '</b><span>' + day.getDate() + '</span><i>' + (kept[i] ? 'In' : 'Off') + '</i></label>';
+  }).join('');
+  document.querySelectorAll('#days input').forEach(x => x.addEventListener('change', syncDays));
+  syncDays();
+}
+function syncDays() {
+  const boxes = [...document.querySelectorAll('#days input')];
+  boxes.forEach(x => x.nextElementSibling.querySelector('i').textContent = x.checked ? 'In' : 'Off');
+  const on = boxes.filter(x => x.checked).length, off = boxes.map((x, i) => x.checked ? null : DOW[i]).filter(Boolean);
+  $('dayline').innerHTML = on === 0 ? 'Tap the days you\'ll be in.' : '<b>In ' + on + ' day' + (on === 1 ? '' : 's') + '</b>' + (off.length ? ' · Off ' + off.join(', ') : ' · No days off');
+}
+function setDays(fn) { document.querySelectorAll('#days input').forEach((x, i) => x.checked = fn(i)); syncDays(); }
+$('qAll').addEventListener('click', () => setDays(() => true));
+$('qWeekdays').addEventListener('click', () => setDays(i => i < 5));
+$('qClear').addEventListener('click', () => setDays(() => false));
+
+function resetDates() {
+  const today = new Date();
+  $('date').value = iso(today);
+  $('follow').value = iso(addDays(today, 7));
+}
+$('date').addEventListener('change', () => { if ($('date').value) { $('follow').value = iso(addDays(parse($('date').value), 7)); buildDays(); } });
+resetDates(); buildDays();
+
+$('f').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const barber = $('barber').value === '__other' ? $('barberOther').value.trim() : $('barber').value;
+  const mgr = $('mgr').value === '__other' ? $('mgrOther').value.trim() : $('mgr').value;
+  const days = [...document.querySelectorAll('#days input')].filter(x => x.checked).length;
+  const miss = !$('shop').value ? 'Choose your shop.' : !barber ? 'Choose your name.' : !mgr ? 'Choose who ran the one-on-one.' : !$('date').value ? 'Pick the date.' : !$('summary').value.trim() ? 'Write a short summary of the meeting.' : days === 0 ? 'Tap the days you\'re working next week.' : '';
+  if (miss) { $('msg').textContent = miss; return; }
+  $('msg').textContent = '';
+  const mon = nextMonday(parse($('date').value));
+  const payload = {
+    action: 'oneOnOne', shop: $('shop').value, barber, manager: mgr, date: $('date').value,
+    summary: $('summary').value.trim(),
+    topics: TOPICS.map((_, i) => $('t' + (i + 1)).value.trim()),
+    goals: ['g1', 'g2', 'g3'].map(id => $(id).value.trim()),
+    followUp: $('follow').value, weekOf: iso(mon),
+    days: [...document.querySelectorAll('#days input')].map(x => x.checked),
+    offNote: $('offNote').value.trim()
+  };
+  $('send').disabled = true; $('send').textContent = 'Sending…';
+  const done = () => {
+    $('doneTitle').textContent = 'Got it, ' + barber.split(/\s+/)[0];
+    $('doneText').textContent = 'Your one-on-one with ' + mgr + ' is in, along with your schedule for ' + rangeText(mon) + '.';
+    $('f').hidden = true; $('intro').hidden = true; $('done').hidden = false;
+    $('send').disabled = false; $('send').textContent = 'Send my one-on-one';
+    window.scrollTo(0, 0);
+  };
+  const fail = (text) => {
+    $('msg').textContent = text || "That didn't send. Check your signal and try again.";
+    $('send').disabled = false; $('send').textContent = 'Send my one-on-one';
+  };
+  // Same Google script as the license upload; it adds a row to the "DMND KUTZ One-on-Ones" sheet.
+  fetch(SAVE_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+    .then(r => r.json())
+    .then(res => res && res.ok ? done() : fail(res && res.error))
+    .catch(() => fail());
+});
+$('again').addEventListener('click', () => {
+  $('f').reset(); $('shop').dispatchEvent(new Event('change'));
+  $('mgrOther').hidden = true;
+  document.querySelectorAll('.topic').forEach(d => { d.open = false; d.classList.remove('filled'); d.querySelector('.state').textContent = 'Tap to add'; });
+  resetDates(); setDays(() => false); buildDays();
+  $('done').hidden = true; $('f').hidden = false; $('intro').hidden = false;
+});
+
+</script>
+</body>
+</html>
