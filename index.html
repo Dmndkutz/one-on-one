@@ -238,7 +238,7 @@ $('shop').addEventListener('change', () => {
   $('fromPerceny').hidden = true;
   if (!s) { b.disabled = true; b.innerHTML = '<option value="">Choose your shop first</option>'; $('barberOther').hidden = true; return; }
   b.disabled = false;
-  b.insertAdjacentHTML('beforeend', '<option value="">Choose your name</option>');
+  b.insertAdjacentHTML('beforeend', '<option value="">Barber name</option>');
   [...ROSTER[s]].sort((a, c) => a.localeCompare(c)).forEach(n => b.insertAdjacentHTML('beforeend', '<option>' + esc(n) + '</option>'));
   b.insertAdjacentHTML('beforeend', '<option value="__other">I\'m not on the list</option>');
   $('barberOther').hidden = true;
@@ -248,7 +248,7 @@ function fillManagers(s) {
   $('mgrOther').hidden = true;
   if (!s) { m.disabled = true; m.innerHTML = '<option value="">Choose your shop first</option>'; return; }
   m.disabled = false;
-  m.innerHTML = '<option value="">Choose your manager</option>' + (MANAGERS[s] || []).map(n => '<option>' + esc(n) + '</option>').join('') + '<option value="__other">Someone else</option>';
+  m.innerHTML = '<option value="">Manager name</option>' + (MANAGERS[s] || []).map(n => '<option>' + esc(n) + '</option>').join('') + '<option value="__other">Someone else</option>';
 }
 $('barber').addEventListener('change', () => {
   $('barberOther').hidden = $('barber').value !== '__other';
